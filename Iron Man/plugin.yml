@@ -1,0 +1,11 @@
+name: Iron Man
+main: com.n3wham.IronMan.Main
+version: 1.0.0
+authors: [Haribo98, n3wham]
+commands:
+  im:
+    description: Iron Man command.
+  ironman:
+    description: Iron Man command.
+    
+    
