@@ -1,7 +1,5 @@
 package com.n3wham.IronMan;
 
-import net.milkbowl.vault.permission.Permission;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -12,27 +10,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.n3wham.IronMan.Events.*;
 
 public class Main extends JavaPlugin {
 
-	public static Permission perms = null;
-
 	@Override
 	public void onEnable() {
-
 		loadEvents();
 		loadCommands();
-		
-		if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
-			setupPermissions();
-		}
-		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, run, 60, 20);
-
 	}
 
 	@Override
@@ -50,85 +38,37 @@ public class Main extends JavaPlugin {
 		getCommand("ironman").setExecutor(new IronManCommand(this));
 	}
 
-	public boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
-	}
-
 	public String getPrefix() {
-		return ChatColor.GOLD + "[" + ChatColor.RED + "Iron Man" + ChatColor.GOLD + "] " + ChatColor.GRAY;
+		return ChatColor.GOLD + "[" + ChatColor.RED + "Iron Man"
+				+ ChatColor.GOLD + "] " + ChatColor.GRAY;
 	}
 
 	public boolean hasPermission(Player player, String perm) {
-		if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
-			return perms.has(player, perm);
-		} else {
-			if (player.isOp()) {
-				return true;
-			}
-			
-			return player.hasPermission(perm);
-		}
+		return player.hasPermission(perm);
 	}
 
 	public boolean isIronMan(Player player) {
-		return getConfig().getBoolean("players." + player.getName() + ".enabled");
+		return getConfig().getBoolean(
+				"players." + player.getName() + ".enabled");
 	}
 
 	public void setIronMan(Player player, boolean bool) {
 		getConfig().set("players." + player.getName() + ".enabled", bool);
 		ItemStack air = new ItemStack(Material.AIR);
-		
-		ItemStack imIHelm = new ItemStack(Material.IRON_HELMET);
-		ItemStack imIPlate = new ItemStack(Material.IRON_CHESTPLATE);
-		ItemStack imILegs = new ItemStack(Material.IRON_LEGGINGS);
-		ItemStack imIBoots = new ItemStack(Material.IRON_BOOTS);
-		
-		ItemStack imLHelm = new ItemStack(Material.LEATHER_HELMET);
-		ItemStack imLPlate = new ItemStack(Material.LEATHER_CHESTPLATE);
-		ItemStack imLLegs = new ItemStack(Material.LEATHER_LEGGINGS);
-		ItemStack imLBoots = new ItemStack(Material.LEATHER_BOOTS);
-		
-		LeatherArmorMeta imLHelmMeta = (LeatherArmorMeta) imLHelm.getItemMeta();
-		imLHelmMeta.setColor(Color.fromRGB(255, 215, 0));
-		imLHelmMeta.setDisplayName(ChatColor.GOLD + "Iron Man Helmet");
-		imLHelm.setItemMeta(imLHelmMeta);
-		
-		LeatherArmorMeta imLPlateMeta = (LeatherArmorMeta) imLPlate.getItemMeta();
-		imLPlateMeta.setColor(Color.fromRGB(255, 0, 0));
-		imLPlateMeta.setDisplayName(ChatColor.GOLD + "Iron Man Chestplate");
-		imLPlate.setItemMeta(imLPlateMeta);
-		
-		LeatherArmorMeta imLLegsMeta = (LeatherArmorMeta) imLLegs.getItemMeta();
-		imLLegsMeta.setColor(Color.fromRGB(255, 0, 0));
-		imLLegsMeta.setDisplayName(ChatColor.GOLD + "Iron Man Leggings");
-		imLLegs.setItemMeta(imLLegsMeta);
-		
-		LeatherArmorMeta imLBootsMeta = (LeatherArmorMeta) imLBoots.getItemMeta();
-		imLBootsMeta.setColor(Color.fromRGB(255, 215, 0));
-		imLBootsMeta.setDisplayName(ChatColor.GOLD + "Iron Man Boots");
-		imLBoots.setItemMeta(imLBootsMeta);
-		
-		ItemMeta imIHelmMeta = imIHelm.getItemMeta();
-		imIHelmMeta.setDisplayName(ChatColor.GOLD + "Iron Man Helmet");
-		imIHelm.setItemMeta(imIHelmMeta);
-		
-		ItemMeta imIPlateMeta = imIPlate.getItemMeta();
-		imIPlateMeta.setDisplayName(ChatColor.GOLD + "Iron Man Chestplate");
-		imIPlate.setItemMeta(imIPlateMeta);
-		
-		ItemMeta imILegsMeta = imILegs.getItemMeta();
-		imILegsMeta.setDisplayName(ChatColor.GOLD + "Iron Man Leggings");
-		imILegs.setItemMeta(imILegsMeta);
-		
-		ItemMeta imIBootsMeta = imIBoots.getItemMeta();
-		imIBootsMeta.setDisplayName(ChatColor.GOLD + "Iron Man Boots");
-		imIBoots.setItemMeta(imIBootsMeta);
-		
+
+		ItemStack imIHelm = this.getArmourWithMeta(Material.IRON_HELMET, null, "Iron Man Helmet");
+		ItemStack imIPlate = this.getArmourWithMeta(Material.IRON_CHESTPLATE, null, "Iron Man Chestplate");
+		ItemStack imILegs = this.getArmourWithMeta(Material.IRON_LEGGINGS, null, "Iron Man Leggings");
+		ItemStack imIBoots = this.getArmourWithMeta(Material.IRON_BOOTS, null, "Iron Man Boots");
+
+		ItemStack imLHelm = this.getArmourWithMeta(Material.LEATHER_HELMET, Color.fromRGB(255, 215, 0), "Iron Man Helmet");
+		ItemStack imLPlate = this.getArmourWithMeta(Material.LEATHER_CHESTPLATE,Color.fromRGB(255, 0, 0),"Iron Man Chestplate");
+		ItemStack imLLegs = this.getArmourWithMeta(Material.LEATHER_LEGGINGS,Color.fromRGB(255, 0, 0),"Iron Man Leggings");
+		ItemStack imLBoots = this.getArmourWithMeta(Material.LEATHER_BOOTS,Color.fromRGB(255, 215, 0),"Iron Man Boots");
+
 		if (bool) {
 			PlayerInventory pI = player.getInventory();
-			
+
 			int f1 = pI.firstEmpty();
 			ItemStack helm = pI.getHelmet();
 			pI.setItem(f1, helm);
@@ -142,7 +82,7 @@ public class Main extends JavaPlugin {
 			} else {
 				getConfig().set("players." + player.getName() + ".helm", 999);
 			}
-			
+
 			int f2 = pI.firstEmpty();
 			ItemStack plate = pI.getChestplate();
 			pI.setItem(f2, plate);
@@ -156,7 +96,7 @@ public class Main extends JavaPlugin {
 			} else {
 				getConfig().set("players." + player.getName() + ".plate", 999);
 			}
-			
+
 			int f3 = pI.firstEmpty();
 			ItemStack legs = pI.getLeggings();
 			pI.setItem(f3, legs);
@@ -170,7 +110,7 @@ public class Main extends JavaPlugin {
 			} else {
 				getConfig().set("players." + player.getName() + ".legs", 999);
 			}
-			
+
 			int f4 = pI.firstEmpty();
 			ItemStack boots = pI.getBoots();
 			pI.setItem(f4, boots);
@@ -184,14 +124,15 @@ public class Main extends JavaPlugin {
 			} else {
 				getConfig().set("players." + player.getName() + ".boots", 999);
 			}
-			
+
 			saveConfig();
 			player.getInventory().setArmorContents(pI.getArmorContents());
 			player.getInventory().setContents(pI.getContents());
 		} else {
 			PlayerInventory pI = player.getInventory();
-			
-			int f1 = getConfig().getInt("players." + player.getName() + ".helm");
+
+			int f1 = getConfig()
+					.getInt("players." + player.getName() + ".helm");
 			if (f1 == 999) {
 				pI.setHelmet(air);
 			} else {
@@ -201,7 +142,8 @@ public class Main extends JavaPlugin {
 			}
 			getConfig().set("players." + player.getName() + ".helm", 0);
 
-			int f2 = getConfig().getInt("players." + player.getName() + ".plate");
+			int f2 = getConfig().getInt(
+					"players." + player.getName() + ".plate");
 			if (f2 == 999) {
 				pI.setChestplate(air);
 			} else {
@@ -211,7 +153,8 @@ public class Main extends JavaPlugin {
 			}
 			getConfig().set("players." + player.getName() + ".plate", 0);
 
-			int f3 = getConfig().getInt("players." + player.getName() + ".legs");
+			int f3 = getConfig()
+					.getInt("players." + player.getName() + ".legs");
 			if (f3 == 999) {
 				pI.setLeggings(air);
 			} else {
@@ -221,7 +164,8 @@ public class Main extends JavaPlugin {
 			}
 			getConfig().set("players." + player.getName() + ".legs", 0);
 
-			int f4 = getConfig().getInt("players." + player.getName() + ".boots");
+			int f4 = getConfig().getInt(
+					"players." + player.getName() + ".boots");
 			if (f4 == 999) {
 				pI.setBoots(air);
 			} else {
@@ -230,11 +174,25 @@ public class Main extends JavaPlugin {
 				pI.setItem(f4, air);
 			}
 			getConfig().set("players." + player.getName() + ".boots", 0);
-			
+
 			saveConfig();
 			player.getInventory().setArmorContents(pI.getArmorContents());
 			player.getInventory().setContents(pI.getContents());
 		}
+	}
+
+	private ItemStack getArmourWithMeta(Material m, Color c, String s) {
+		ItemStack is = new ItemStack(m);
+		ItemMeta armMeta = is.getItemMeta();
+		armMeta.setDisplayName(ChatColor.GOLD + s);
+		if (m.equals(Material.LEATHER_BOOTS)
+				|| m.equals(Material.LEATHER_CHESTPLATE)
+				|| m.equals(Material.LEATHER_HELMET)
+				|| m.equals(Material.LEATHER_LEGGINGS)) {
+			((LeatherArmorMeta) armMeta).setColor(c);
+		}
+		is.setItemMeta(armMeta);
+		return is;
 	}
 
 	public String getArmourSetting(Player player) {
@@ -244,19 +202,20 @@ public class Main extends JavaPlugin {
 	public void setArmourSetting(Player player, String setting) {
 		getConfig().set("players." + player.getName() + ".armour", setting);
 	}
-	
+
 	Runnable run = new Runnable() {
-		
+
 		public void run() {
-			
+
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (isIronMan(player) && player.isFlying()) {
-					player.getLocation().getWorld().playEffect(player.getLocation(), Effect.SMOKE, 5);
+					player.getLocation().getWorld()
+							.playEffect(player.getLocation(), Effect.SMOKE, 5);
 				}
 			}
-			
+
 		}
-		
+
 	};
 
 }

@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/g5/Dropbox/Inferno/jar/bukkit.jar"/>
-	<classpathentry kind="lib" path="/Users/g5/Dropbox/Inferno/jar/craftbukkit.jar"/>
-	<classpathentry kind="lib" path="/Users/g5/Dropbox/Shared/bukkit/Vault.jar"/>
+	<classpathentry kind="lib" path="/home/sam/BukkitHelpWorkspace/craftbukkit-1.6.2-R1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
